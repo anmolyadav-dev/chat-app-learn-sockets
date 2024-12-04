@@ -6,13 +6,6 @@ export const sendMessage = async (req, res) => {
     const { message } = req.body;
     const receiverId = req.params.id;
     const senderId = req.user._id;
-    // checking if receiver is valid
-
-    // console.log(receiverId);
-    const receiver = await User.findById(receiverId);
-    if (!receiver) {
-      return res.status(400).json({ error: "receiver not found " });
-    }
 
     // checking if conversation already exists
 
@@ -40,7 +33,7 @@ export const sendMessage = async (req, res) => {
       message,
     });
     if (newMessage) {
-      conversation.message.push(newMessage._id);
+      conversation.messages.push(newMessage._id);
     }
 
     // TODO: socket IO functionality
@@ -57,10 +50,19 @@ export const sendMessage = async (req, res) => {
   }
 };
 
-export const getMessage = async (req, res) => {
+export const getMessages = async (req, res) => {
   try {
     const receiverId = req.params.id;
     const senderId = req.user._id;
+    console.log(senderId, receiverId);
+    const conversation = await Conversation.findOne({
+      participants: { $all: [senderId, receiverId] },
+    }).populate("messages");
+    // console.log("conversation : ", conversation);
+    if (!conversation) {
+      return res.status(201).json([]);
+    }
+    res.status(201).json(conversation.messages);
   } catch (error) {
     console.log("error in get message controller", error.message);
     res.status(500).json({ error: "internal server error" });

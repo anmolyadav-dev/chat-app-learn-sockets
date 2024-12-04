@@ -17,6 +17,14 @@ const protectRoute = async (req, res, next) => {
       return res.status(404).json({ error: "user not found" });
     }
 
+    // checking if receiver is valid
+    const receiverId = req.params.id;
+    console.log(receiverId);
+    const receiver = await User.findById(receiverId);
+    if (!receiver) {
+      return res.status(400).json({ error: "receiver not found " });
+    }
+
     req.user = user; // adds sender data to req object
 
     next();
