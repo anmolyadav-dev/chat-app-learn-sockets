@@ -1,7 +1,7 @@
 import User from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 
-// check is sender and reciever is present and database
+// check if sender is loggedin
 // and add sender cookie to request object as (req.user = user)  so that all other can get sender data from req obj
 
 const protectRoute = async (req, res, next) => {
@@ -21,15 +21,17 @@ const protectRoute = async (req, res, next) => {
       return res.status(404).json({ error: "user not found" });
     }
 
-    // checking if receiver is valid
-    const receiverId = req.params.id;
-    console.log(receiverId);
-    const receiver = await User.findById(receiverId);
-    if (!receiver) {
-      return res.status(400).json({ error: "receiver not found " });
-    }
-
     req.user = user; // adds sender data to req object
+    // checking if receiver is valid
+    const receiverId = req.params.id; //if no receiver is given then just move ahead to next middleware else check if receiver is there in database
+    // console.log(receiverId);
+    if (!receiverId) return next();
+    else {
+      const receiver = await User.findById(receiverId);
+      if (!receiver) {
+        return res.status(400).json({ error: "receiver not found " });
+      }
+    }
 
     next();
   } catch (error) {
