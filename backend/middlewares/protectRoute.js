@@ -1,5 +1,9 @@
 import User from "../models/user.model.js";
 import jwt from "jsonwebtoken";
+
+// check is sender and reciever is present and database
+// and add sender cookie to request object as (req.user = user)  so that all other can get sender data from req obj
+
 const protectRoute = async (req, res, next) => {
   try {
     // checking if sender is valid
