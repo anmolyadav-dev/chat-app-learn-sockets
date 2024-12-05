@@ -19,7 +19,7 @@ const SignUp = () => {
     e.preventDefault();
     await signup(inputs);
     // toast.success("such");
-    console.log(inputs);
+    // console.log(inputs);
   };
   return (
     <div className="flex flex-col items-center justify-center min-w-96 mx-auto">
@@ -102,8 +102,15 @@ const SignUp = () => {
           </Link>
 
           <div>
-            <button className="btn btn-block btn-sm mt-2 border border-slate-700">
-              Sign Up
+            <button
+              className="btn btn-block btn-sm mt-2 border border-slate-700"
+              disabled={loading}
+            >
+              {loading ? (
+                <span className="loading loading-spinner"></span>
+              ) : (
+                "Sign Up"
+              )}
             </button>
           </div>
         </form>
