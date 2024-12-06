@@ -1,4 +1,4 @@
-import { useAuthContext } from "../context/AuthContext";
+import { useAuthContext } from "../context/AuthContext.jsx";
 import toast from "react-hot-toast";
 import { useState } from "react";
 const useLogin = () => {
@@ -19,7 +19,7 @@ const useLogin = () => {
         throw new Error(data.error);
       }
 
-      localStorage.setItem("chat-app", JSON.stringify(data));
+      localStorage.setItem("chat-user", JSON.stringify(data));
 
       setAuthUser(data);
       console.log(data);
